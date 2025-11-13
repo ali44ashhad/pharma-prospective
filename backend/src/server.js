@@ -65,22 +65,19 @@
 // });
 
 
+
+
 // server.js
 require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-
-// import your DB connect but don't let it crash the module import
 const connectDB = require('./config/database');
-
-console.log('JWT_SECRET present:', !!process.env.JWT_SECRET);
 
 const app = express();
 
 // -------------------------------
-// ✅ MULTI-ORIGIN CORS SUPPORT
-// -------------------------------
+// Multi-origin CORS config (reusable)
 const allowedOrigins = [
   process.env.FRONTEND_URL_1,
   process.env.FRONTEND_URL_2,
@@ -90,6 +87,7 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function (origin, callback) {
+    // allow tools like curl/postman (no origin)
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) return callback(null, true);
     console.warn('❌ CORS BLOCKED:', origin);
@@ -98,41 +96,33 @@ const corsOptions = {
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-  preflightContinue: false,
   optionsSuccessStatus: 204
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+app.options('*', cors(corsOptions)); // ensure preflight uses same options
 
-// ---------------------
-// Middleware
-// ---------------------
+// --------------------- middleware
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// ---------------------
-// Routes (lazy require so module loads quickly)
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/admin', require('./routes/admin'));
-app.use('/api/papers', require('./routes/papers'));
+// --------------------- Routes
+// IMPORTANT: register routes WITHOUT the '/api' prefix here.
+// We'll mount this Express app as a serverless function at /api
+app.use('/auth', require('./routes/auth'));
+app.use('/admin', require('./routes/admin'));
+app.use('/papers', require('./routes/papers'));
 
-// Health Check
-app.get('/api/health', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Server is running',
-    timestamp: new Date().toISOString()
-  });
+// health (accessible at /api/health)
+app.get('/health', (req, res) => {
+  res.json({ success: true, message: 'Server running', timestamp: new Date().toISOString() });
 });
 
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({ success: false, message: 'Route not found' });
-});
+// 404
+app.use('*', (req, res) => res.status(404).json({ success: false, message: 'Route not found' }));
 
-// Global error handler
+// global error handler
 app.use((err, req, res, next) => {
   if (err && err.message === 'Not allowed by CORS') {
     return res.status(403).json({ success: false, message: 'CORS Error: Origin not allowed' });
@@ -141,29 +131,23 @@ app.use((err, req, res, next) => {
   res.status(500).json({
     success: false,
     message: 'Internal server error',
-    ...(process.env.NODE_ENV === "development" && { error: err && err.message })
+    ...(process.env.NODE_ENV === 'development' && { error: err && err.message })
   });
 });
 
-// Connect to DB but catch errors so module import doesn't crash
+// Try to connect to DB but do not throw on import — log errors instead
 (async () => {
   try {
-    // check required envs
-    const missing = [];
-    if (!process.env.MONGODB_URI) missing.push('MONGODB_URI');
-    if (!process.env.JWT_SECRET) missing.push('JWT_SECRET');
-    if (missing.length) {
-      console.warn('⚠️ Missing required env vars:', missing.join(', '));
-      // don't throw here so serverless can still start — but DB-dependent endpoints may fail
-    } else {
-      await connectDB();
-      console.log('✅ DB connected (attempted at module load)');
+    if (!process.env.MONGODB_URI) {
+      console.warn('⚠️ MONGODB_URI not set — DB will not connect in this environment');
+      return;
     }
-  } catch (err) {
-    console.error('DB connection failed during startup (caught):', err && (err.message || err));
-    // do not rethrow — rethrowing would crash the function on import
+    await connectDB();
+    console.log('✅ DB connected (attempted at import)');
+  } catch (e) {
+    console.error('DB connection failed (caught):', e && (e.message || e));
+    // intentionally not rethrowing to avoid crashing function import
   }
 })();
 
-// Export the express app so serverless wrapper can use it
 module.exports = app;
