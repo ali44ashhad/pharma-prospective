@@ -2,7 +2,7 @@
 // frontend/src/services/api.js
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://pharma-prospective.vercel.app/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -56,7 +56,7 @@ api.interceptors.response.use(
 export const authService = {
   login: (email, password) => api.post('/auth/login', { email, password }).then(res => res.data),
   logout: () => api.post('/auth/logout').then(res => res.data),
-  // getCurrentUser: (options = {}) => api.get('/auth/me', options).then(res => res.data),
+  getCurrentUser: (options = {}) => api.get('/auth/me', options).then(res => res.data),
   changePassword: (data) => api.put('/auth/change-password', data).then(res => res.data)
 };
 
