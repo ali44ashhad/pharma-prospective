@@ -64,6 +64,10 @@
 //   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 // });
 
+
+
+
+// server.js
 require('dotenv').config();
 console.log('JWT_SECRET loaded into process:', !!process.env.JWT_SECRET);
 
@@ -85,29 +89,36 @@ const allowedOrigins = [
   process.env.FRONTEND_URL_2,
   "http://localhost:5173",
   "http://localhost:3000"
-].filter(Boolean); // remove empty values
+].filter(Boolean); // remove empty/undefined values
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // Allow no-origin requests (mobile apps, Postman)
-      if (!origin) return callback(null, true);
+// build a reusable corsOptions object and handler
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (e.g., mobile apps, curl, Postman)
+    if (!origin) {
+      return callback(null, true);
+    }
 
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.log("❌ CORS BLOCKED:", origin);
-        return callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-  })
-);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      console.warn('❌ CORS BLOCKED:', origin);
+      // signal to cors middleware that origin is not allowed
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  preflightContinue: false, // let cors return the response
+  optionsSuccessStatus: 204
+};
 
-// Preflight
-app.options("*", cors());
+// Use the configured CORS for all routes
+app.use(cors(corsOptions));
+
+// Ensure preflight responses use the same options
+app.options('*', cors(corsOptions));
 
 // ---------------------
 // Middleware
@@ -142,12 +153,22 @@ app.use('*', (req, res) => {
 
 // Global error handler
 app.use((err, req, res, next) => {
+  // If the error is a CORS error thrown by the origin check, respond with 403
+  if (err && err.message === 'Not allowed by CORS') {
+    console.warn('CORS error for request origin:', req.headers.origin);
+    return res.status(403).json({
+      success: false,
+      message: 'CORS Error: Origin not allowed'
+    });
+  }
+
   console.error('🔥 Global error:', err);
 
+  // fallback 500
   res.status(500).json({
     success: false,
     message: 'Internal server error',
-    ...(process.env.NODE_ENV === "development" && { error: err.message })
+    ...(process.env.NODE_ENV === "development" && { error: err && err.message })
   });
 });
 

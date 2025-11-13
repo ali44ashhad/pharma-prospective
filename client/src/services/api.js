@@ -2,7 +2,7 @@
 // frontend/src/services/api.js
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://worker-community-ecsl.vercel.app/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://pharma-prospective.vercel.app/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
