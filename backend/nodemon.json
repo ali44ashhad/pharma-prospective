@@ -1,0 +1,5 @@
+{
+  "watch": ["src"],
+  "ignore": ["public", "client", "frontend", "node_modules", ".git", ".vscode"],
+  "ext": "js,json"
+}
