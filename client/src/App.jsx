@@ -21,7 +21,7 @@ import Footer from './components/layout/Footer.jsx';
 import Header from './components/layout/Header.jsx';
 import ResearchPapers from './pages/ResearchPapers.jsx';
 import UploadPaper from './pages/UploadPaper.jsx';
-import AdminPanel from './components/admin/Adminpanel.jsx';
+import AdminPanel from './components/admin/AdminPanel.jsx';
 
 function App() {
   return (
