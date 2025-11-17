@@ -11,16 +11,33 @@ const generateToken = (userId) => {
   );
 };
 
-const setTokenCookie = (res, token) => {
-  const cookieOptions = {
+const buildCookieOptions = (overrides = {}) => {
+  const baseOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'none',
-    domain:"vercel.app",
-    path: '/',
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    path: '/'
   };
+
+  if (process.env.COOKIE_DOMAIN) {
+    baseOptions.domain = process.env.COOKIE_DOMAIN;
+  }
+
+  return {
+    ...baseOptions,
+    ...overrides
+  };
+};
+
+const setTokenCookie = (res, token) => {
+  const cookieOptions = buildCookieOptions({
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  });
   res.cookie('token', token, cookieOptions);
+};
+
+const clearTokenCookie = (res) => {
+  res.clearCookie('token', buildCookieOptions());
 };
 
 exports.login = async (req, res) => {
@@ -114,7 +131,7 @@ exports.logout = async (req, res) => {
       });
     }
 
-    res.clearCookie('token');
+    clearTokenCookie(res);
     res.json({
       success: true,
       message: 'Logout successful'
