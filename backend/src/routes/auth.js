@@ -30,7 +30,7 @@ router.post('/login', loginValidation, login);
 router.post('/logout', logout);
 
 // Protected routes
-router.get('/me',  getCurrentUser);
+router.get('/me', authenticate, getCurrentUser);
 router.put('/change-password', authenticate, changePasswordValidation, changePassword);
 
 module.exports = router;
