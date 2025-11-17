@@ -106,14 +106,19 @@ const DocumentViewer = () => {
                 <div className="w-full h-full flex flex-col">
                   <div className="relative w-full h-[calc(100vh-200px)] bg-gray-50 rounded-lg overflow-hidden">
                     {/* PDF Viewer */}
-                    <iframe
+                    {/* <iframe
                       src={getProtectedPdfUrl(paper.fileUrl)}
                       title={paper.title}
                       className="w-full h-full border-0"
                       style={{
                         pointerEvents: 'none', // Prevents selection and right-click
                       }}
-                    />
+                    /> */}
+                    <iframe
+  src={getProtectedPdfUrl(paper.fileUrl)}
+  title={paper.title}
+  className="w-full h-full border-0"
+/>
                     
                     {/* Overlay to prevent interaction */}
                     <div 

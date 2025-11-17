@@ -331,22 +331,7 @@ const PapersTab = ({ papers = [], users = [], onAssign }) => {
                   >
                     <UserPlus className="w-4 h-4" />
                   </motion.button>
-                  <motion.button 
-                    whileHover={{ scale: 1.05 }} 
-                    whileTap={{ scale: 0.95 }} 
-                    className="p-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors" 
-                    title="View"
-                  >
-                    <Eye className="w-4 h-4" />
-                  </motion.button>
-                  <motion.button 
-                    whileHover={{ scale: 1.05 }} 
-                    whileTap={{ scale: 0.95 }} 
-                    className="p-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors" 
-                    title="Download"
-                  >
-                    <FileDown className="w-4 h-4" />
-                  </motion.button>
+                  
                 </div>
               </div>
             </motion.div>
@@ -513,7 +498,7 @@ const CreateUserModal = ({ onClose, onCreated }) => {
             name="role"
             value={formData.role}
             onChange={onChange}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            className="w-full bg-cyan-400 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
           >
             <option value="researcher">Researcher</option>
             <option value="admin">Admin</option>

@@ -67,7 +67,7 @@ const AssignPaperModal = ({ paper, users, onClose, onAssigned }) => {
             <select
               value={selectedUser}
               onChange={(e) => setSelectedUser(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              className="w-full bg-cyan-400 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
             >
               <option value="">Select a user...</option>
               {users.map((user) => (
