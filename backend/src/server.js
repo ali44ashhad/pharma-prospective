@@ -19,9 +19,16 @@ app.use(cookieParser());
 
 const allowedOrigins = [
   process.env.FRONTEND_URL,
+  process.env.FRONTEND_URL_ALT,
   'https://pharma-prospective.vercel.app',
   'https://pharma-prospective-4dgt.vercel.app'
 ].filter(Boolean);
+
+const allowedHeaders = [
+  'Content-Type',
+  'Authorization',
+  'x-skip-auth-redirect'
+];
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -37,7 +44,8 @@ const corsOptions = {
     return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders,
+  exposedHeaders: allowedHeaders,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 };
 
