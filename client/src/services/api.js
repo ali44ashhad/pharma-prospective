@@ -56,7 +56,7 @@ api.interceptors.response.use(
 export const authService = {
   login: (email, password) => api.post('/auth/login', { email, password }).then(res => res.data),
   logout: () => api.post('/auth/logout').then(res => res.data),
-  // getCurrentUser: (options = {}) => api.get('/auth/me', options).then(res => res.data),
+  getCurrentUser: (options = {}) => api.get('/auth/me', options).then(res => res.data),
   changePassword: (data) => api.put('/auth/change-password', data).then(res => res.data)
 };
 
