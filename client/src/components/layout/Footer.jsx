@@ -36,7 +36,7 @@ const Footer = () => {
                 <Beaker className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-white">Pharma prospective</h2>
+                <h2 className="text-xl font-bold text-white">Pharma Perspective</h2>
                 <p className="text-gray-400 text-sm">Secure Research Portal</p>
               </div>
             </Link>
@@ -47,17 +47,28 @@ const Footer = () => {
             
             {/* Contact Info */}
             <div className="space-y-3">
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=FDBC0410+Compass+Building+Al+Shohada+Road+Al+Hamra+Industrial+Zone-FZ+Ras+Al+Khaimah"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-3 text-gray-400 hover:text-cyan-400 transition-colors"
+              >
+                <MapPin className="w-4 h-4 shrink-0" />
+                <span className="text-sm">FDBC0410 Compass Building, Al Shohada Road, Al Hamra Industrial Zone-FZ, Ras Al Khaimah</span>
+              </a>
               <div className="flex items-center space-x-3 text-gray-400">
-                <MapPin className="w-4 h-4" />
-                <span className="text-sm">123 Research Park, BioTech City, ST 12345</span>
+                <Phone className="w-4 h-4 shrink-0" />
+                <div className="flex flex-col text-sm space-y-1">
+                  <a href="tel:+971503843832" className="hover:text-cyan-400 transition-colors">🇦🇪 +971 503843832</a>
+                  <a href="tel:+971501489828" className="hover:text-cyan-400 transition-colors">🇦🇪 +971 501489828</a>
+                </div>
               </div>
               <div className="flex items-center space-x-3 text-gray-400">
-                <Phone className="w-4 h-4" />
-                <span className="text-sm">+1 (555) 123-4567</span>
-              </div>
-              <div className="flex items-center space-x-3 text-gray-400">
-                <Mail className="w-4 h-4" />
-                <span className="text-sm">contact@pharmaresearch.com</span>
+                <Mail className="w-4 h-4 shrink-0" />
+                <div className="flex flex-col text-sm space-y-1">
+                  <a href="mailto:mdv@mrsadvisory.co" className="hover:text-cyan-400 transition-colors">mdv@mrsadvisory.co</a>
+                  <a href="mailto:aman@mrsadvisory.co" className="hover:text-cyan-400 transition-colors">aman@mrsadvisory.co</a>
+                </div>
               </div>
             </div>
           </div>

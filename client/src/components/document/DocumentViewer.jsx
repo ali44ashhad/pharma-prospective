@@ -136,7 +136,7 @@ const DocumentViewer = () => {
                       }}
                     >
                       <div className="text-gray-800 text-4xl font-bold whitespace-nowrap">
-                        PHARMA PROSPECTIVE
+                        PHARMA Perspective
                       </div>
                     </div>
                   </div>

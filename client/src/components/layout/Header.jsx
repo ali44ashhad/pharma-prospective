@@ -78,7 +78,7 @@ const Header = () => {
             </motion.div>
             <div>
               <h1 className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text">
-                Pharma Prospective
+                Pharma Perspective
               </h1>
               <p className="text-gray-400 text-xs">Secure Research Portal</p>
             </div>

@@ -40,7 +40,7 @@ const Home = () => {
           transition={{ duration: 1 }}
           className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 text-transparent bg-clip-text"
         >
-          Pharma prospective
+          Pharma Perspective
         </motion.h1>
 
         <motion.p
